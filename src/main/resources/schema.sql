@@ -1,4 +1,6 @@
 --post
+
+SET SQL_MODE='ALLOW_INVALID_DATES';
 CREATE TABLE Post(
 id INT auto_increment PRIMARY KEY,
 version INT,
