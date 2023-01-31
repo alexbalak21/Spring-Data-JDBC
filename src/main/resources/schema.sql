@@ -12,10 +12,20 @@ CREATE TABLE Post(
 id INT auto_increment PRIMARY KEY,
 version INT,
 title VARCHAR(255) not null,
-content text not null,
+content TEXT not null,
 published_on TIMESTAMP not null,
-updated_on TIMESTAMP NULL DEFAULT NULL,
+updated_on TIMESTAMP null default null,
 author INT,
 FOREIGN key(author) REFERENCES Author(id)
+);
+
+--Comment
+CREATE TABLE Comment(
+post int not null,
+name VARCHAR(255) not null,
+content TEXT not null,
+published_on TIMESTAMP not null,
+updated_on TIMESTAMP null default null,
+FOREIGN KEY (post) REFERENCES Post(id)
 );
 

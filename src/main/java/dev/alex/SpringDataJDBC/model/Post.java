@@ -4,6 +4,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Post {
     @Id
@@ -13,6 +15,8 @@ public class Post {
     private LocalDateTime publishedOn;
     private  LocalDateTime updatedOn;
     private AggregateReference<Author, Integer> author;
+    private Set<Comment> comments = new HashSet<>();
+
 
     public Post(String title, String content, AggregateReference<Author, Integer> author){
         this.title = title;
@@ -20,6 +24,29 @@ public class Post {
         this.publishedOn = LocalDateTime.now();
         this.updatedOn = null;
         this.author = author;
+    }
+
+    public void addComment(Comment comment){
+        comments.add(comment);
+        comment.post = this;
+    }
+
+
+
+    public AggregateReference<Author, Integer> getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(AggregateReference<Author, Integer> author) {
+        this.author = author;
+    }
+
+    public Set<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
     }
 
     public Integer getId() {
