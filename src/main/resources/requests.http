@@ -1,0 +1,120 @@
+
+@baseUrl = http://localhost:8100/api
+@token = ""
+
+
+### REGISTER
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+    "name": "User",
+    "email": "user@example.com",
+    "password": "password123"
+}
+
+### LOGIN & GET TOKEN
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+    "email": "user@example.com",
+    "password": "password123"
+}
+
+@token = {{login.response.body.token}}
+
+
+
+###GET HOME
+GET {{baseUrl}}
+Content-Type: application/json
+
+
+###POST PRODUCT
+POST {{baseUrl}}/products
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "name": "Product 1",
+    "price": 10.1
+}
+
+
+###GET ALL PRODUCTS
+GET {{baseUrl}}/products
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+###SET COOKIE
+GET {{baseUrl}}/cookie
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+###GET COOKIE
+GET {{baseUrl}}/cookie/read
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+
+
+###POST
+POST http://localhost:8100/api/products
+Content-Type: application/json
+
+{
+    "name": "Product 2",
+    "price": 20.2
+}
+
+### REGISTER
+POST http://localhost:8100/api/auth/register
+Content-Type: application/json
+
+{
+    "email": "user@example.com",
+    "password": "password123"
+}
+
+### LOGIN
+POST http://localhost:8100/api/auth/login
+Content-Type: application/json
+
+{
+    "email": "user@example.com",
+    "password": "password123"
+}
+
+###PUT
+PUT http://localhost:8100/api/products/1
+Content-Type: application/json
+
+{
+    "name": "Product 1 updated",
+    "price": 11.1
+}
+
+###DELETE
+DELETE http://localhost:8100/api/products/1
+Content-Type: application/json
+
+
+
+###GET ALL PRODUCTS SERVER
+GET http://springboot.alwaysdata.net/api/products
+Content-Type: application/json
+
+{}
+
+###POST
+POST http://springboot.alwaysdata.net/api/products
+Content-Type: application/json
+
+{
+    "name": "Product 1",
+    "price": 10.1
+}
+
