@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,8 +35,23 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public String getUserById() {
-        return "User by id";
+    public ResponseEntity<?> getUserById(@PathVariable Long id) {
+        try {
+            System.out.println("Fetching user with ID: " + id);
+            Optional<User> user = userRepository.findById(id);
+            
+            if (user.isPresent()) {
+                return ResponseEntity.ok(user.get());
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("User not found with ID: " + id);
+            }
+        } catch (Exception e) {
+            System.err.println("Error fetching user: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Error fetching user: " + e.getMessage());
+        }
     }
 
     /**

@@ -3,7 +3,7 @@
 @token = ""
 
 
-### REGISTER
+### CREATE USER
 POST {{baseUrl}}/users
 Content-Type: application/json
 
@@ -12,6 +12,11 @@ Content-Type: application/json
     "email": "user@example.com",
     "password": "password123"
 }
+
+### GET USER BY ID
+GET {{baseUrl}}/users/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
 
 ### LOGIN & GET TOKEN
 # @name login
