@@ -110,8 +110,32 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public String deleteUser() {
-        return "Delete user";
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        try {
+            System.out.println("Attempting to delete user with ID: " + id);
+            
+            // Check if user exists
+            if (!userRepository.findById(id).isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("User not found with ID: " + id);
+            }
+            
+            // Delete the user
+            int deleted = userRepository.deleteById(id);
+            
+            if (deleted > 0) {
+                System.out.println("Successfully deleted user with ID: " + id);
+                return ResponseEntity.ok("User deleted successfully");
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to delete user with ID: " + id);
+            }
+        } catch (Exception e) {
+            System.err.println("Error deleting user: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Error deleting user: " + e.getMessage());
+        }
     }
 
 }
