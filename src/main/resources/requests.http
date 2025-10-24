@@ -2,9 +2,8 @@
 @baseUrl = http://localhost:8100/api
 @token = ""
 
-
-### CREATE USER
-POST {{baseUrl}}/users
+### REGISTER
+POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
@@ -12,11 +11,6 @@ Content-Type: application/json
     "email": "user@example.com",
     "password": "password123"
 }
-
-### GET USER BY ID
-GET {{baseUrl}}/users/1
-Content-Type: application/json
-Authorization: Bearer {{token}}
 
 ### LOGIN & GET TOKEN
 # @name login
@@ -30,7 +24,10 @@ Content-Type: application/json
 
 @token = {{login.response.body.token}}
 
-
+###GET USER DETAILS
+GET {{baseUrl}}/user
+Content-Type: application/json
+Authorization: Bearer {{token}}
 
 ###GET HOME
 GET {{baseUrl}}
