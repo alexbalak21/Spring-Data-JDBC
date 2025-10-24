@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.UUID;
 
 @Service
 public class JwtService {
@@ -30,8 +31,10 @@ public class JwtService {
     }
     
     private String createToken(Map<String, Object> claims, String subject) {
+        String id = UUID.randomUUID().toString();
         return Jwts.builder()
                 .setClaims(claims)
+                .setId(id)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
