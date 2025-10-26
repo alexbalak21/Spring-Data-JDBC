@@ -8,10 +8,10 @@ import java.util.Optional;
 
 public interface TokenBlacklistRepository {
     List<TokenBlacklist> findAll();
-    Optional<TokenBlacklist> findById(Long id);
+    Optional<TokenBlacklist> findByUserId(Long userId);
     Optional<TokenBlacklist> findByJti(String jti);
     boolean existsByJti(String jti);
     TokenBlacklist save(TokenBlacklist token);
-    int deleteById(Long id);
+    int deleteByUserId(Long userId);
     int deleteByExpiresAtBefore(LocalDateTime now);
 }

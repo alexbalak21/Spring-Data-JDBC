@@ -3,17 +3,17 @@ package app.model;
 import java.time.LocalDateTime;
 
 public class TokenBlacklist {
-    private Long id;
+    private Long userId;
     private String jti;
     private LocalDateTime expiresAt;
 
     // Getters and Setters
-    public Long getId() {
-        return id;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getJti() {
@@ -34,6 +34,6 @@ public class TokenBlacklist {
 
     @Override
     public String toString() {
-        return "{\"id\"=" + id + ", \"jti\"=" + jti + ", \"expiresAt\"=" + expiresAt + "}";
+        return "{\"userId\"=" + userId + ", \"jti\"=" + jti + ", \"expiresAt\"=" + expiresAt + "}";
     }
 }

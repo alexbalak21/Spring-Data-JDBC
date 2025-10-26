@@ -24,7 +24,7 @@ public class JdbcTokenBlacklistRepository implements TokenBlacklistRepository {
 
     private final RowMapper<TokenBlacklist> tokenBlacklistRowMapper = (rs, rowNum) -> {
         TokenBlacklist token = new TokenBlacklist();
-        token.setId(rs.getLong("id"));
+        token.setUserId(rs.getLong("user_id"));
         token.setJti(rs.getString("jti"));
         token.setExpiresAt(rs.getTimestamp("expires_at").toLocalDateTime());
         return token;
@@ -37,9 +37,9 @@ public class JdbcTokenBlacklistRepository implements TokenBlacklistRepository {
     }
 
     @Override
-    public Optional<TokenBlacklist> findById(Long id) {
-        String sql = "SELECT * FROM token_blacklist WHERE id = ?";
-        List<TokenBlacklist> tokens = jdbcTemplate.query(sql, tokenBlacklistRowMapper, id);
+    public Optional<TokenBlacklist> findByUserId(Long userId) {
+        String sql = "SELECT * FROM token_blacklist WHERE user_id = ?";
+        List<TokenBlacklist> tokens = jdbcTemplate.query(sql, tokenBlacklistRowMapper, userId);
         return tokens.isEmpty() ? Optional.empty() : Optional.of(tokens.get(0));
     }
 
@@ -59,46 +59,40 @@ public class JdbcTokenBlacklistRepository implements TokenBlacklistRepository {
 
     @Override
     public TokenBlacklist save(TokenBlacklist token) {
-        if (token.getId() == null) {
-            return create(token);
-        } else {
+        // If user already has a token, update it, otherwise create a new one
+        if (findByUserId(token.getUserId()).isPresent()) {
             update(token);
-            return token;
+        } else {
+            create(token);
         }
+        return token;
     }
 
-    private TokenBlacklist create(TokenBlacklist token) {
-        String sql = "INSERT INTO token_blacklist (jti, expires_at) VALUES (?, ?)";
-        var keyHolder = new GeneratedKeyHolder();
+    private void create(TokenBlacklist token) {
+        String sql = "INSERT INTO token_blacklist (user_id, jti, expires_at) VALUES (?, ?, ?)";
         
         jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, token.getJti());
-            ps.setTimestamp(2, Timestamp.valueOf(token.getExpiresAt()));
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.NO_GENERATED_KEYS);
+            ps.setLong(1, token.getUserId());
+            ps.setString(2, token.getJti());
+            ps.setTimestamp(3, Timestamp.valueOf(token.getExpiresAt()));
             return ps;
-        }, keyHolder);
-
-        Number key = keyHolder.getKey();
-        if (key == null) {
-            throw new IllegalStateException("Failed to retrieve generated key after insert");
-        }
-        long id = key.longValue();
-        return findById(id).orElseThrow(() -> new IllegalStateException("Failed to retrieve saved token"));
+        });
     }
 
     private void update(TokenBlacklist token) {
-        String sql = "UPDATE token_blacklist SET jti = ?, expires_at = ? WHERE id = ?";
+        String sql = "UPDATE token_blacklist SET jti = ?, expires_at = ? WHERE user_id = ?";
         jdbcTemplate.update(sql, 
             token.getJti(),
             Timestamp.valueOf(token.getExpiresAt()),
-            token.getId()
+            token.getUserId()
         );
     }
 
     @Override
-    public int deleteById(Long id) {
-        String sql = "DELETE FROM token_blacklist WHERE id = ?";
-        return jdbcTemplate.update(sql, id);
+    public int deleteByUserId(Long userId) {
+        String sql = "DELETE FROM token_blacklist WHERE user_id = ?";
+        return jdbcTemplate.update(sql, userId);
     }
 
     @Override
