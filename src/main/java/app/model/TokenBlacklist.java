@@ -7,6 +7,15 @@ public class TokenBlacklist {
     private String jti;
     private LocalDateTime expiresAt;
 
+
+    public TokenBlacklist() {
+    }
+    
+    public TokenBlacklist(Long userId, String jti, LocalDateTime expiresAt) {
+        this.userId = userId;
+        this.jti = jti;
+        this.expiresAt = expiresAt;
+    }
     // Getters and Setters
     public Long getUserId() {
         return userId;

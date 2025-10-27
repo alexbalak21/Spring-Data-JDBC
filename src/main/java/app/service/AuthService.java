@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
+
 @Service
 public class AuthService {
 
@@ -24,6 +25,10 @@ public class AuthService {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
+    }
+
+    public void logout(String token) {
+        jwtService.blacklistToken(token);
     }
 
     public AuthResponse register(AuthRequest request) {
