@@ -29,7 +29,7 @@ GET {{baseUrl}}/user
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
-###GET HOME
+###LOGOUT
 POST {{baseUrl}}/auth/logout
 Content-Type: application/json
 Authorization: Bearer {{token}}
