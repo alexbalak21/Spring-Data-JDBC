@@ -12,11 +12,11 @@ CREATE TABLE IF NOT EXISTS users (
 
 
 
-CREATE TABLE token_blacklist (
+CREATE TABLE IF NOT EXISTS token_blacklist (
     user_id BIGINT NOT NULL,
     jti VARCHAR(255) NOT NULL,
     expires_at DATETIME NOT NULL,
     PRIMARY KEY (jti),
     KEY idx_user_id (user_id),
     KEY idx_expires_at (expires_at)
-);
+)

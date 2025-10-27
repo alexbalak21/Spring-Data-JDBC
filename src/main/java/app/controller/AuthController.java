@@ -3,14 +3,17 @@ package app.controller;
 import app.dto.AuthRequest;
 import app.dto.AuthResponse;
 import app.service.AuthService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.http.HttpStatus;
+
 
 @RestController
 @RequestMapping("/api/auth")
@@ -33,15 +36,21 @@ public class AuthController {
         AuthResponse response = authService.login(request);
         return ResponseEntity.ok(response);
     }
-
-    @GetMapping("/logout")
-public ResponseEntity<String> logout(@RequestHeader("Authorization") String authHeader) {
-    if (authHeader != null && authHeader.startsWith("Bearer ")) {
-        String token = authHeader.substring(7); // Remove "Bearer " prefix
-        // Now you can use the token for logout logic
-        authService.logout(token);  // Assuming you'll add this method to AuthService
-        return ResponseEntity.ok("Logout successful");
+    
+    @PostMapping("/logout")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void logout(
+            @RequestHeader(value = "Authorization") String authHeader,
+            HttpServletResponse response
+    ) {
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            authService.logout(token);
+        }
+        // Clear any client-side tokens
+        response.setHeader("Authorization", "");
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
     }
-    return ResponseEntity.badRequest().body("Invalid or missing Authorization header");
-}
 }

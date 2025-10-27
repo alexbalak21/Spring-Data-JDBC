@@ -30,8 +30,9 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 ###GET HOME
-GET {{baseUrl}}
+POST {{baseUrl}}/auth/logout
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 
 ###POST PRODUCT
