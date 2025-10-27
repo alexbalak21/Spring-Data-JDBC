@@ -41,6 +41,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
+        // Skip JWT validation for refresh token endpoint
+        if (request.getRequestURI().equals("/api/auth/refresh-token")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        
         // 1. Get the Authorization header from the HTTP request
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
