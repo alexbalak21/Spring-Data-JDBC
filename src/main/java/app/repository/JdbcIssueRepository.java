@@ -57,9 +57,17 @@ public class JdbcIssueRepository implements IssueRepository {
                          rs.getTimestamp("created_at").toLocalDateTime() : null);
         issue.setUpdatedAt(rs.getTimestamp("updated_at") != null ? 
                          rs.getTimestamp("updated_at").toLocalDateTime() : null);
-        issue.setReporterId(rs.getLong("reporter_id"));
-        issue.setAssigneeId(rs.getLong("assignee_id"));
-        issue.setTeamId(rs.getLong("team_id"));
+                         
+        // Handle potential null values for IDs
+        long reporterId = rs.getLong("reporter_id");
+        issue.setReporterId(rs.wasNull() ? null : reporterId);
+        
+        long assigneeId = rs.getLong("assignee_id");
+        issue.setAssigneeId(rs.wasNull() ? null : assigneeId);
+        
+        long teamId = rs.getLong("team_id");
+        issue.setTeamId(rs.wasNull() ? null : teamId);
+        
         issue.setTags(rs.getString("tags"));
         issue.setAttachments(rs.getString("attachments"));
         
@@ -142,9 +150,9 @@ public class JdbcIssueRepository implements IssueRepository {
             ps.setString(4, issue.getType() != null ? issue.getType().name() : null);
             ps.setString(5, issue.getStatus() != null ? issue.getStatus().name().toLowerCase().replace("_", " ") : null);
             ps.setString(6, issue.getResolution());
-            ps.setObject(7, issue.getReporterId() > 0 ? issue.getReporterId() : null);
-            ps.setObject(8, issue.getAssigneeId() > 0 ? issue.getAssigneeId() : null);
-            ps.setObject(9, issue.getTeamId() > 0 ? issue.getTeamId() : null);
+            ps.setObject(7, issue.getReporterId() != null && issue.getReporterId() > 0 ? issue.getReporterId() : null);
+            ps.setObject(8, issue.getAssigneeId() != null && issue.getAssigneeId() > 0 ? issue.getAssigneeId() : null);
+            ps.setObject(9, issue.getTeamId() != null && issue.getTeamId() > 0 ? issue.getTeamId() : null);
             ps.setString(10, issue.getTags());
             ps.setString(11, issue.getAttachments());
             return ps;
@@ -176,9 +184,9 @@ public class JdbcIssueRepository implements IssueRepository {
             ps.setString(4, issue.getType() != null ? issue.getType().name() : null);
             ps.setString(5, issue.getStatus() != null ? issue.getStatus().name().toLowerCase().replace("_", " ") : null);
             ps.setString(6, issue.getResolution());
-            ps.setObject(7, issue.getReporterId() > 0 ? issue.getReporterId() : null);
-            ps.setObject(8, issue.getAssigneeId() > 0 ? issue.getAssigneeId() : null);
-            ps.setObject(9, issue.getTeamId() > 0 ? issue.getTeamId() : null);
+            ps.setObject(7, issue.getReporterId() != null && issue.getReporterId() > 0 ? issue.getReporterId() : null);
+            ps.setObject(8, issue.getAssigneeId() != null && issue.getAssigneeId() > 0 ? issue.getAssigneeId() : null);
+            ps.setObject(9, issue.getTeamId() != null && issue.getTeamId() > 0 ? issue.getTeamId() : null);
             ps.setString(10, issue.getTags());
             ps.setString(11, issue.getAttachments());
             ps.setLong(12, issue.getId());

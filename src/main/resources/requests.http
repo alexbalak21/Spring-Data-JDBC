@@ -50,6 +50,20 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "title": "Bug test",
+  "title": "Bug in login",
   "description": "dGVzdA==",
+  "priority": "HIGH",
+  "type": "BUG",
+  "assigneeId": 2,
+  "teamId": 1
+}
+
+### Create Minimal Issue 
+POST {{baseUrl}}/issues
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "Bug in login",
+  "description": "dGVzdA=="
 }

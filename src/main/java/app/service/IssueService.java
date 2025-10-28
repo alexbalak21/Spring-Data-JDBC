@@ -9,7 +9,6 @@ import app.model.IssueType;
 import app.security.AuthenticationFacade;
 import app.repository.IssueRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.Base64;
 import java.util.List;
@@ -27,27 +26,37 @@ public class IssueService {
     }
 
     public IssueResponse createIssue(IssueRequest request) {
+        // Validate required fields
+        if (request.getTitle() == null || request.getTitle().trim().isEmpty()) {
+            throw new IllegalArgumentException("Title is required");
+        }
+        if (request.getDescription() == null || request.getDescription().trim().isEmpty()) {
+            throw new IllegalArgumentException("Description is required");
+        }
+
         Issue issue = new Issue();
         
         // Set reporter from authentication context if not provided in request
-        if (request.getReporterId() == null) {
-            try {
-                Long currentUserId = authenticationFacade.getCurrentUserId();
-                issue.setReporterId(currentUserId);
-            } catch (SecurityException e) {
+        try {
+            Long currentUserId = authenticationFacade.getCurrentUserId();
+            issue.setReporterId(currentUserId);
+        } catch (SecurityException e) {
+            // If no authentication context and no reporterId provided, reject the request
+            if (request.getReporterId() == null) {
                 throw new SecurityException("User must be authenticated to create an issue");
             }
-        } else {
             issue.setReporterId(request.getReporterId());
         }
         
+        // Map request to issue (default values are already set in the request object)
         mapRequestToIssue(request, issue);
         
         // Handle Base64 encoded description
-        if (StringUtils.hasText(request.getDescription())) {
-            // Decode Base64 to byte[]
+        try {
             byte[] descriptionBytes = Base64.getDecoder().decode(request.getDescription());
             issue.setDescription(descriptionBytes);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid Base64 encoded description");
         }
         
         Issue savedIssue = issueRepository.save(issue);

@@ -4,20 +4,21 @@ import app.model.IssuePriority;
 import app.model.IssueStatus;
 import app.model.IssueType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class IssueRequest {
-    private String title;
-    private String description; // Base64 encoded string for binary data
-    private IssuePriority priority;
-    private IssueType type;
-    private IssueStatus status;
-    private String resolution;
-    private Long reporterId;
-    private Long assigneeId;
-    private Long teamId;
-    private List<String> tags;
-    private List<String> attachments;
+    private String title;  // Required
+    private String description;  // Required, Base64 encoded string for binary data
+    private IssuePriority priority = IssuePriority.MEDIUM;
+    private IssueType type = IssueType.TASK;
+    private IssueStatus status = IssueStatus.OPEN;
+    private String resolution = "";
+    private Long reporterId = null;
+    private Long assigneeId = null;
+    private Long teamId = null;
+    private List<String> tags = new ArrayList<>();
+    private List<String> attachments = new ArrayList<>();
 
     // Getters and Setters
     public String getTitle() {
