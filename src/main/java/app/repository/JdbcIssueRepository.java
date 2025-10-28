@@ -27,7 +27,15 @@ public class JdbcIssueRepository implements IssueRepository {
         Issue issue = new Issue();
         issue.setId(rs.getLong("id"));
         issue.setTitle(rs.getString("title"));
-        issue.setDescription(rs.getString("description"));
+        
+        // Handle BLOB data for description
+        java.sql.Blob blob = rs.getBlob("description");
+        if (blob != null) {
+            issue.setDescription(blob.getBytes(1, (int) blob.length()));
+            blob.free();
+        } else {
+            issue.setDescription(null);
+        }
         
         String priorityStr = rs.getString("priority");
         if (priorityStr != null) {
@@ -129,7 +137,7 @@ public class JdbcIssueRepository implements IssueRepository {
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, issue.getTitle());
-            ps.setString(2, issue.getDescription());
+            ps.setBytes(2, issue.getDescription());
             ps.setString(3, issue.getPriority() != null ? issue.getPriority().name() : null);
             ps.setString(4, issue.getType() != null ? issue.getType().name() : null);
             ps.setString(5, issue.getStatus() != null ? issue.getStatus().name().toLowerCase().replace("_", " ") : null);
@@ -160,20 +168,22 @@ public class JdbcIssueRepository implements IssueRepository {
             WHERE id = ?
             """;
             
-        return jdbcTemplate.update(sql,
-            issue.getTitle(),
-            issue.getDescription(),
-            issue.getPriority() != null ? issue.getPriority().name() : null,
-            issue.getType() != null ? issue.getType().name() : null,
-            issue.getStatus() != null ? issue.getStatus().name().toLowerCase().replace("_", " ") : null,
-            issue.getResolution(),
-            issue.getReporterId() > 0 ? issue.getReporterId() : null,
-            issue.getAssigneeId() > 0 ? issue.getAssigneeId() : null,
-            issue.getTeamId() > 0 ? issue.getTeamId() : null,
-            issue.getTags(),
-            issue.getAttachments(),
-            issue.getId()
-        );
+        return jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, issue.getTitle());
+            ps.setBytes(2, issue.getDescription());
+            ps.setString(3, issue.getPriority() != null ? issue.getPriority().name() : null);
+            ps.setString(4, issue.getType() != null ? issue.getType().name() : null);
+            ps.setString(5, issue.getStatus() != null ? issue.getStatus().name().toLowerCase().replace("_", " ") : null);
+            ps.setString(6, issue.getResolution());
+            ps.setObject(7, issue.getReporterId() > 0 ? issue.getReporterId() : null);
+            ps.setObject(8, issue.getAssigneeId() > 0 ? issue.getAssigneeId() : null);
+            ps.setObject(9, issue.getTeamId() > 0 ? issue.getTeamId() : null);
+            ps.setString(10, issue.getTags());
+            ps.setString(11, issue.getAttachments());
+            ps.setLong(12, issue.getId());
+            return ps;
+        });
     }
 
     @Override

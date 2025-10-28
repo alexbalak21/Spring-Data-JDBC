@@ -43,3 +43,13 @@ Content-Type: application/json
 {
     "refreshToken": "{{refreshToken}}"
 }
+
+### Create Issue (using the token from login)
+POST {{baseUrl}}/issues
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "title": "Bug test",
+  "description": "dGVzdA==",
+}

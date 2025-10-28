@@ -50,10 +50,10 @@ CREATE TABLE IF NOT EXISTS refresh_tokens (
 CREATE TABLE IF NOT EXISTS issues (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
-    description TEXT,
-    priority ENUM('Low', 'Medium', 'High', 'Critical') DEFAULT 'Medium',
-    type ENUM('Bug', 'Feature', 'Task', 'Incident') DEFAULT 'Task',
-    status ENUM('Open', 'In Progress', 'Resolved', 'Closed', 'On Hold') DEFAULT 'Open',
+    description BLOB,
+    priority ENUM('LOW', 'MEDIUM', 'HIGH', 'CRITICAL') DEFAULT 'MEDIUM',
+    type ENUM('BUG', 'FEATURE', 'TASK', 'INCIDENT') DEFAULT 'TASK',
+    status ENUM('OPEN', 'IN_PROGRESS', 'RESOLVED', 'CLOSED', 'ON_HOLD') DEFAULT 'OPEN',
     resolution VARCHAR(255),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -61,5 +61,5 @@ CREATE TABLE IF NOT EXISTS issues (
     assignee_id INT,
     team_id INT,
     tags TEXT, -- Store comma-separated tags (e.g., "frontend,urgent")
-    attachments TEXT, -- Store comma-separated URLs or file paths
+    attachments TEXT -- Store comma-separated URLs or file paths
 );

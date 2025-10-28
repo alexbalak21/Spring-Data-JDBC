@@ -1,34 +1,25 @@
-package app.model;
+package app.dto;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
+import app.model.IssuePriority;
+import app.model.IssueStatus;
+import app.model.IssueType;
+
 import java.util.List;
 
-public class Issue {
-    private Long id;
+public class IssueRequest {
     private String title;
-    private byte[] description; // BLOB for storing binary data
+    private String description; // Base64 encoded string for binary data
     private IssuePriority priority;
     private IssueType type;
     private IssueStatus status;
     private String resolution;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
     private Long reporterId;
     private Long assigneeId;
     private Long teamId;
-    private String tags; // Comma-separated tags
-    private String attachments; // Comma-separated URLs or file paths
+    private List<String> tags;
+    private List<String> attachments;
 
     // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -37,11 +28,11 @@ public class Issue {
         this.title = title;
     }
 
-    public byte[] getDescription() {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(byte[] description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
@@ -77,22 +68,6 @@ public class Issue {
         this.resolution = resolution;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
     public Long getReporterId() {
         return reporterId;
     }
@@ -100,6 +75,7 @@ public class Issue {
     public void setReporterId(Long reporterId) {
         this.reporterId = reporterId;
     }
+
 
     public Long getAssigneeId() {
         return assigneeId;
@@ -117,37 +93,19 @@ public class Issue {
         this.teamId = teamId;
     }
 
-    public String getTags() {
+    public List<String> getTags() {
         return tags;
     }
 
-    public void setTags(String tags) {
+    public void setTags(List<String> tags) {
         this.tags = tags;
     }
 
-    public List<String> getTagsAsList() {
-        return tags == null || tags.isEmpty() ? List.of() : 
-               Arrays.asList(tags.split(","));
-    }
-
-    public void setTagsFromList(List<String> tags) {
-        this.tags = tags == null ? null : String.join(",", tags);
-    }
-
-    public String getAttachments() {
+    public List<String> getAttachments() {
         return attachments;
     }
 
-    public void setAttachments(String attachments) {
+    public void setAttachments(List<String> attachments) {
         this.attachments = attachments;
-    }
-
-    public List<String> getAttachmentsAsList() {
-        return attachments == null || attachments.isEmpty() ? List.of() : 
-               Arrays.asList(attachments.split(","));
-    }
-
-    public void setAttachmentsFromList(List<String> attachments) {
-        this.attachments = attachments == null ? null : String.join(",", attachments);
     }
 }

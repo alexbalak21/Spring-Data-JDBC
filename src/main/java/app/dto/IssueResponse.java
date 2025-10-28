@@ -1,13 +1,16 @@
-package app.model;
+package app.dto;
+
+import app.model.IssuePriority;
+import app.model.IssueStatus;
+import app.model.IssueType;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
-public class Issue {
+public class IssueResponse {
     private Long id;
     private String title;
-    private byte[] description; // BLOB for storing binary data
+    private String description; // Base64 encoded string
     private IssuePriority priority;
     private IssueType type;
     private IssueStatus status;
@@ -15,10 +18,11 @@ public class Issue {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Long reporterId;
+    private UserResponse reporter;
     private Long assigneeId;
     private Long teamId;
-    private String tags; // Comma-separated tags
-    private String attachments; // Comma-separated URLs or file paths
+    private List<String> tags;
+    private List<String> attachments;
 
     // Getters and Setters
     public Long getId() {
@@ -37,11 +41,11 @@ public class Issue {
         this.title = title;
     }
 
-    public byte[] getDescription() {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(byte[] description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
@@ -101,6 +105,17 @@ public class Issue {
         this.reporterId = reporterId;
     }
 
+    public UserResponse getReporter() {
+        return reporter;
+    }
+
+    public void setReporter(UserResponse reporter) {
+        this.reporter = reporter;
+        if (reporter != null) {
+            this.reporterId = reporter.getId();
+        }
+    }
+
     public Long getAssigneeId() {
         return assigneeId;
     }
@@ -117,37 +132,19 @@ public class Issue {
         this.teamId = teamId;
     }
 
-    public String getTags() {
+    public List<String> getTags() {
         return tags;
     }
 
-    public void setTags(String tags) {
+    public void setTags(List<String> tags) {
         this.tags = tags;
     }
 
-    public List<String> getTagsAsList() {
-        return tags == null || tags.isEmpty() ? List.of() : 
-               Arrays.asList(tags.split(","));
-    }
-
-    public void setTagsFromList(List<String> tags) {
-        this.tags = tags == null ? null : String.join(",", tags);
-    }
-
-    public String getAttachments() {
+    public List<String> getAttachments() {
         return attachments;
     }
 
-    public void setAttachments(String attachments) {
+    public void setAttachments(List<String> attachments) {
         this.attachments = attachments;
-    }
-
-    public List<String> getAttachmentsAsList() {
-        return attachments == null || attachments.isEmpty() ? List.of() : 
-               Arrays.asList(attachments.split(","));
-    }
-
-    public void setAttachmentsFromList(List<String> attachments) {
-        this.attachments = attachments == null ? null : String.join(",", attachments);
     }
 }
