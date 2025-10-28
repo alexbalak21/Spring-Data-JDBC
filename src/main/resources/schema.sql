@@ -45,3 +45,21 @@ CREATE TABLE IF NOT EXISTS refresh_tokens (
     KEY idx_user_token (user_id, token),
     CONSTRAINT fk_refresh_token_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+
+CREATE TABLE IF NOT EXISTS issues (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    priority ENUM('Low', 'Medium', 'High', 'Critical') DEFAULT 'Medium',
+    type ENUM('Bug', 'Feature', 'Task', 'Incident') DEFAULT 'Task',
+    status ENUM('Open', 'In Progress', 'Resolved', 'Closed', 'On Hold') DEFAULT 'Open',
+    resolution VARCHAR(255),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    reporter_id INT,
+    assignee_id INT,
+    team_id INT,
+    tags TEXT, -- Store comma-separated tags (e.g., "frontend,urgent")
+    attachments TEXT, -- Store comma-separated URLs or file paths
+);
