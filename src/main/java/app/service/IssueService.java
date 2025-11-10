@@ -76,9 +76,14 @@ public class IssueService {
     }
 
     public List<IssueResponse> getIssuesByStatus(String status) {
-        return issueRepository.findByStatus(status).stream()
-                .map(this::mapToResponse)
-                .collect(Collectors.toList());
+        try {
+            IssueStatus issueStatus = IssueStatus.valueOf(status.toUpperCase());
+            return issueRepository.findByStatus(issueStatus).stream()
+                    .map(this::mapToResponse)
+                    .collect(Collectors.toList());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid status value: " + status);
+        }
     }
 
     public List<IssueResponse> getIssuesByAssignee(Long assigneeId) {

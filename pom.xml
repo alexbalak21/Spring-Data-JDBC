@@ -37,10 +37,10 @@
 		</dependency>
 
     
-    <!-- JDBC support for database operations, provides basic database connection pooling -->
+    <!-- JPA support for database operations -->
     <dependency>
         <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-jdbc</artifactId>
+        <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
 
     <!-- MariaDB Java client for connecting to MariaDB/MySQL databases -->

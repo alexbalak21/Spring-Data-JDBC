@@ -1,23 +1,49 @@
 package app.model;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Arrays;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import java.util.List;
+import java.util.Arrays;
 
+@Entity
+@Table(name = "issues")
 public class Issue {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false, length = 200)
     private String title;
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
     private byte[] description; // BLOB for storing binary data
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private IssuePriority priority;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private IssueType type;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private IssueStatus status;
+    @Column(columnDefinition = "TEXT")
     private String resolution;
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+    @UpdateTimestamp
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+    @Column(name = "reporter_id", nullable = false)
     private Long reporterId;
+    @Column(name = "assignee_id")
     private Long assigneeId;
+    @Column(name = "team_id")
     private Long teamId;
+    @Column(columnDefinition = "TEXT")
     private String tags; // Comma-separated tags
+    @Column(columnDefinition = "TEXT")
     private String attachments; // Comma-separated URLs or file paths
 
     // Getters and Setters
