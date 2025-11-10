@@ -37,6 +37,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // Public endpoints that don't require authentication
                 .requestMatchers(
+                    "/api",
                     "/api/auth/register",
                     "/api/auth/login",
                     "/api/auth/refresh-token"
