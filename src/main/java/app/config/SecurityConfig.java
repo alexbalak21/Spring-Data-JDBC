@@ -2,7 +2,7 @@ package app.config;
 
 import app.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -33,6 +33,19 @@ public class SecurityConfig {
             // Disable CSRF protection (common in REST APIs that use token-based auth)
             .csrf(csrf -> csrf.disable())
             
+            // Enable CORS
+            .cors(cors -> cors.configurationSource(request -> {
+                var corsConfig = new CorsConfiguration();
+                corsConfig.setAllowedOrigins(List.of(
+                    "http://localhost:3000",  // React dev server
+                    "http://127.0.0.1:3000"
+                ));
+                corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                corsConfig.setAllowedHeaders(List.of("*"));
+                corsConfig.setAllowCredentials(true);
+                return corsConfig;
+            }))
+            
             // Configure authorization rules
             .authorizeHttpRequests(auth -> auth
                 // Public endpoints that don't require authentication
@@ -40,8 +53,10 @@ public class SecurityConfig {
                     "/api",
                     "/api/auth/register",
                     "/api/auth/login",
-                    "/api/auth/refresh-token"
+                    "/api/auth/refresh-token",
+                    "/api/users"  // Allow unauthenticated access to users list for demo
                 ).permitAll()
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // Allow CORS preflight requests
                 .requestMatchers(HttpMethod.POST, "/api/auth/logout").authenticated()
                 // All other requests must be authenticated
                 .anyRequest().authenticated()
