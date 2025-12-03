@@ -1,16 +1,13 @@
 package app.controller;
 
-import java.util.Map;
-
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-
-@RestController
+@Controller
 public class HomeController {
     
-    @GetMapping("/api")
-    public Map<String, String> home() {
-        return Map.of("message", "Welcome to the API!");
+    @GetMapping(value = {"/", "/index"})
+    public String index() {
+        return "index";  // This should resolve to src/main/resources/templates/index.html
     }
 }

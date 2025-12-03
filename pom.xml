@@ -49,6 +49,12 @@
         <artifactId>mariadb-java-client</artifactId>
         <scope>runtime</scope>
     </dependency>
+    
+    <!-- Thymeleaf for server-side rendering -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-thymeleaf</artifactId>
+    </dependency>
 
 	<!-- Spring Security for authentication and authorization -->
     <dependency>

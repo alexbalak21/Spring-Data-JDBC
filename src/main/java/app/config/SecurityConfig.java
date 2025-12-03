@@ -40,11 +40,8 @@ public class SecurityConfig {
             // Enable CORS
             .cors(cors -> cors.configurationSource(request -> {
                 var corsConfig = new CorsConfiguration();
-                corsConfig.setAllowedOrigins(List.of(
-                    "http://localhost:3000",  // React dev server
-                    "http://127.0.0.1:3000"
-                ));
-                corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                corsConfig.setAllowedOrigins(List.of("*"));
+                corsConfig.setAllowedMethods(List.of("*"));
                 corsConfig.setAllowedHeaders(List.of("*"));
                 corsConfig.setAllowCredentials(true);
                 return corsConfig;
@@ -52,18 +49,7 @@ public class SecurityConfig {
             
             // Configure authorization rules
             .authorizeHttpRequests(auth -> auth
-                // Public endpoints that don't require authentication
-                .requestMatchers(
-                    "/api",
-                    "/api/auth/register",
-                    "/api/auth/login",
-                    "/api/auth/refresh-token",
-                    "/api/users"  // Allow unauthenticated access to users list for demo
-                ).permitAll()
-                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // Allow CORS preflight requests
-                .requestMatchers(HttpMethod.POST, "/api/auth/logout").authenticated()
-                // All other requests must be authenticated
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()  // Allow all requests for now
             )
             
             // Configure session management to be stateless (no HTTP session)
