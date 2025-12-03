@@ -66,5 +66,5 @@ Authorization: Bearer {{token}}
 
 {
   "title": "Bug in login",
-  "description": "dGVzdA=="
+  "description": "hello world"
 }

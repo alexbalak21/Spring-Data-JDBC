@@ -10,7 +10,6 @@ import app.security.AuthenticationFacade;
 import app.repository.IssueRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,13 +50,8 @@ public class IssueService {
         // Map request to issue (default values are already set in the request object)
         mapRequestToIssue(request, issue);
         
-        // Handle Base64 encoded description
-        try {
-            byte[] descriptionBytes = Base64.getDecoder().decode(request.getDescription());
-            issue.setDescription(descriptionBytes);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid Base64 encoded description");
-        }
+        // Set description directly as string (HTML content)
+        issue.setDescription(request.getDescription());
         
         Issue savedIssue = issueRepository.save(issue);
         return mapToResponse(savedIssue);
@@ -121,9 +115,9 @@ public class IssueService {
         response.setId(issue.getId());
         response.setTitle(issue.getTitle());
         
-        // Encode binary description to Base64
+        // Set description directly as string (HTML content)
         if (issue.getDescription() != null) {
-            response.setDescription(Base64.getEncoder().encodeToString(issue.getDescription()));
+            response.setDescription(issue.getDescription());
         }
         
         response.setPriority(issue.getPriority());

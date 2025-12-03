@@ -27,11 +27,11 @@ import java.util.UUID;
 public class JwtService {
     
     // Secret key used for signing the JWT (injected from application properties)
-    @Value("${jwt.secret}")
+    @Value("${app.jwt.secret}")
     private String secret;
     
     // Token expiration time in milliseconds (default: 24 hours)
-    @Value("${jwt.expiration:86400000}")
+    @Value("${app.jwt.expiration:86400000}")
     private long expirationMs;
 
     // Repository for checking blacklisted tokens

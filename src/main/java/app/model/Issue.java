@@ -16,8 +16,8 @@ public class Issue {
     @Column(nullable = false, length = 200)
     private String title;
     @Lob
-    @Column(columnDefinition = "LONGBLOB")
-    private byte[] description; // BLOB for storing binary data
+    @Column(columnDefinition = "TEXT")
+    private String description; // TEXT for storing HTML content
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private IssuePriority priority;
@@ -63,11 +63,11 @@ public class Issue {
         this.title = title;
     }
 
-    public byte[] getDescription() {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(byte[] description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
